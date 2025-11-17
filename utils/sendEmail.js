@@ -1,4 +1,5 @@
 const SibApiV3Sdk = require("sib-api-v3-sdk");
+require("dotenv").config();
 
 // Initialize client
 const client = SibApiV3Sdk.ApiClient.instance;
@@ -9,7 +10,7 @@ const sendEmail = async ({ to, subject, html }) => {
     const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
 
     const sendSmtpEmail = {
-      sender: { name: "Binge", email: "dbnemails@gmail.com" },
+      sender: { name: "DBN", email: "dbnemails@gmail.com" },
       to: [{ email: to }],
       subject,
       htmlContent: html,
@@ -17,7 +18,7 @@ const sendEmail = async ({ to, subject, html }) => {
 
     await apiInstance.sendTransacEmail(sendSmtpEmail);
 
-    console.log("✅ Email sent successfully via Brevo");
+    console.log(`✅ Email sent to ${to} successfully via Brevo`);
   } catch (error) {
     console.error("❌ Failed to send email via Brevo:", error);
   }
