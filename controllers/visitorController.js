@@ -7,11 +7,10 @@ exports.trackVisitor = async (req, res) => {
   try {
     const { page } = req.body;
 
-    // Get real IP (Render)
+    // Get real visitor IP
     let ip =
       req.headers["x-forwarded-for"]?.split(",")[0]?.trim() ||
-      req.headers["x-real-ip"] ||
-      req.connection?.remoteAddress ||
+      req.ip ||
       req.socket?.remoteAddress ||
       "";
 
@@ -21,12 +20,12 @@ exports.trackVisitor = async (req, res) => {
     const parser = new UAParser(userAgent);
     const deviceInfo = parser.getResult();
 
-    // Fetch IP location
+    // Fetch location from ipapi
     let location = {};
     try {
       const response = await axios.get(`https://ipapi.co/${ip}/json/`);
       location = response.data;
-      console.log("Location:", response.data);
+      console.log("Location:", location);
     } catch (err) {
       console.log("Location fetch failed");
       location = {};
@@ -59,7 +58,6 @@ exports.trackVisitor = async (req, res) => {
 exports.getVisitors = async (req, res) => {
   try {
     const visitors = await Visitor.find().sort({ createdAt: -1 });
-    console.log(visitors);
     return res.status(200).json({
       success: true,
       data: visitors,
@@ -72,13 +70,11 @@ exports.getVisitors = async (req, res) => {
   }
 };
 
-// Show total & unique visitor count
+// Stats for dashboard
 exports.stats = async (req, res) => {
   try {
     const totalVisitors = await Visitor.countDocuments();
     const uniqueVisitors = await Visitor.distinct("ip");
-    console.log(uniqueVisitors);
-
     return res.status(200).json({
       success: true,
       totalVisitors,

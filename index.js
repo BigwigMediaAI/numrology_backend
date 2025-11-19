@@ -8,9 +8,13 @@ require("dotenv").config();
 
 const app = express();
 
+// Fix for getting real client IP behind Render / proxies
+app.set("trust proxy", true);
+
 app.use(express.json());
 app.use(cors());
 
+// Routes
 app.use("/api/leads", leadRoutes);
 app.use("/api/visitors", visitorRoutes);
 
@@ -22,9 +26,9 @@ app.use("/", (req, res) => {
 app.listen(process.env.PORT, async () => {
   try {
     await connect();
+    console.log("✅ DB connected");
   } catch (error) {
     console.error("❌ DB connection failed:", error);
   }
-
   console.log(`🚀 Server is listening on port ${process.env.PORT}`);
 });
