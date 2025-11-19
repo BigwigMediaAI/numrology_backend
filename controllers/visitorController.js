@@ -9,6 +9,7 @@ exports.trackVisitor = async (req, res) => {
 
     const ip =
       req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress;
+    console.log(ip);
 
     const userAgent = req.headers["user-agent"];
     const parser = new UAParser(userAgent);
@@ -19,6 +20,7 @@ exports.trackVisitor = async (req, res) => {
     try {
       const response = await axios.get(`https://ipapi.co/${ip}/json/`);
       location = response.data;
+      console.log(response.data);
     } catch (err) {
       location = {};
     }
@@ -50,6 +52,7 @@ exports.trackVisitor = async (req, res) => {
 exports.getVisitors = async (req, res) => {
   try {
     const visitors = await Visitor.find().sort({ createdAt: -1 });
+    console.log(visitors);
     return res.status(200).json({
       success: true,
       data: visitors,
@@ -67,6 +70,7 @@ exports.stats = async (req, res) => {
   try {
     const totalVisitors = await Visitor.countDocuments();
     const uniqueVisitors = await Visitor.distinct("ip");
+    console.log(uniqueVisitors);
 
     return res.status(200).json({
       success: true,
