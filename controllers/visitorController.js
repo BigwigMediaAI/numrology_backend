@@ -7,21 +7,28 @@ exports.trackVisitor = async (req, res) => {
   try {
     const { page } = req.body;
 
-    const ip =
-      req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress;
-    console.log(ip);
+    // Get real IP (Render)
+    let ip =
+      req.headers["x-forwarded-for"]?.split(",")[0]?.trim() ||
+      req.headers["x-real-ip"] ||
+      req.connection?.remoteAddress ||
+      req.socket?.remoteAddress ||
+      "";
+
+    console.log("Visitor IP:", ip);
 
     const userAgent = req.headers["user-agent"];
     const parser = new UAParser(userAgent);
     const deviceInfo = parser.getResult();
 
-    // Get IP Location Data
+    // Fetch IP location
     let location = {};
     try {
       const response = await axios.get(`https://ipapi.co/${ip}/json/`);
       location = response.data;
-      console.log(response.data);
+      console.log("Location:", response.data);
     } catch (err) {
+      console.log("Location fetch failed");
       location = {};
     }
 
