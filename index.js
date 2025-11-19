@@ -2,21 +2,16 @@ const express = require("express");
 const cors = require("cors");
 const { connect } = require("./config/db");
 const leadRoutes = require("./routes/leadRoutes");
-const visitorRoutes = require("./routes/visitorRoutes");
 
 require("dotenv").config();
 
 const app = express();
-
-// Fix for getting real client IP behind Render / proxies
-app.set("trust proxy", true);
 
 app.use(express.json());
 app.use(cors());
 
 // Routes
 app.use("/api/leads", leadRoutes);
-app.use("/api/visitors", visitorRoutes);
 
 app.use("/", (req, res) => {
   res.send("API LIVE🚀");
