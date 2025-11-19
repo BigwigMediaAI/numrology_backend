@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const { connect } = require("./config/db");
 const leadRoutes = require("./routes/leadRoutes");
+const visitorRoutes = require("./routes/visitorRoutes");
 
 require("dotenv").config();
 
@@ -11,6 +12,7 @@ app.use(express.json());
 app.use(cors());
 
 app.use("/api/leads", leadRoutes);
+app.use("/api/visitors", visitorRoutes);
 
 app.use("/", (req, res) => {
   res.send("API LIVE🚀");
