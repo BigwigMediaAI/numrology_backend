@@ -77,3 +77,31 @@ exports.deleteLead = async (req, res) => {
     return res.status(500).json({ success: false, message: error.message });
   }
 };
+
+// Update Lead Marked Status
+exports.updateLeadMarked = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { marked } = req.body; // Expect: { marked: true/false }
+
+    const updatedLead = await Lead.findByIdAndUpdate(
+      id,
+      { marked },
+      { new: true }
+    );
+
+    if (!updatedLead) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Lead not found" });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Lead marked status updated",
+      data: updatedLead,
+    });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};

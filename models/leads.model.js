@@ -5,6 +5,7 @@ const leadSchema = new mongoose.Schema({
   email: String,
   phone: String,
   message: String,
+  marked: Boolean,
   createdAt: { type: Date, default: Date.now },
 });
 

@@ -5,6 +5,7 @@ const {
   createLead,
   getLeads,
   deleteLead,
+  updateLeadMarked,
 } = require("../controllers/leadController");
 
 // POST - Create Lead
@@ -15,5 +16,8 @@ router.get("/", getLeads);
 
 // DELETE - Delete Lead by ID
 router.delete("/:id", deleteLead);
+
+// update marked status
+router.put("/mark/:id", updateLeadMarked);
 
 module.exports = router;
